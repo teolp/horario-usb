@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programación Sede Campus - Bello</title>
+<style>
+  :root{
+    --ink:#1c2430;
+    --paper:#f6f4ee;
+    --panel:#ffffff;
+    --rule:#d8d3c4;
+    --navy:#233a5e;
+    --navy-deep:#182842;
+    --brass:#a9762f;
+    --brass-soft:#f1e3c8;
+    --ok:#3d6b4c;
+    --warn:#a34a2e;
+    --muted:#6d7280;
+    --mono: "IBM Plex Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+    --serif: "Source Serif Pro", Georgia, "Times New Roman", serif;
+    --sans: "IBM Plex Sans", "Segoe UI", Arial, sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .masthead{
+    background:linear-gradient(180deg, var(--navy-deep), var(--navy));
+    color:#f2ede0;
+    padding:36px 28px 26px;
+    border-bottom:4px solid var(--brass);
+  }
+  .masthead .top-row{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .masthead .eyebrow{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:#c9b98a;
+    margin-bottom:10px;
+  }
+  .masthead h1{
+    font-family:var(--serif);
+    font-weight:600;
+    font-size:clamp(26px,3.6vw,38px);
+    margin:0 0 4px;
+    line-height:1.08;
+  }
+  .weekday-badge{
+    display:inline-flex;
+    align-items:baseline;
+    gap:8px;
+    background:rgba(169,118,47,.16);
+    border:1px solid rgba(201,185,138,.4);
+    border-radius:999px;
+    padding:6px 14px;
+    font-family:var(--mono);
+    font-size:12.5px;
+    color:#f1e3c8;
+    text-transform:capitalize;
+    white-space:nowrap;
+  }
+  .weekday-badge b{color:#fff;font-size:13.5px;}
+  .masthead p{
+    margin:6px 0 0;
+    color:#cfd6e2;
+    font-size:14px;
+    max-width:640px;
+  }
+  .masthead .meta{
+    display:flex;
+    gap:22px;
+    margin-top:18px;
+    flex-wrap:wrap;
+  }
+  .masthead .meta div{
+    font-family:var(--mono);
+    font-size:11.5px;
+    color:#e7ddc4;
+    border-left:2px solid var(--brass);
+    padding-left:10px;
+  }
+  .masthead .meta span{display:block;color:#8fa0bd;text-transform:uppercase;letter-spacing:.08em;font-size:9.5px;margin-bottom:2px;}
+
+  .controls{
+    max-width:1080px;
+    margin:-22px auto 0;
+    padding:0 28px;
+    position:relative;
+    z-index:3;
+  }
+  .search-card{
+    background:var(--panel);
+    border:1px solid var(--rule);
+    border-radius:10px;
+    box-shadow:0 14px 30px -20px rgba(24,40,66,.45);
+    padding:18px 20px;
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+  .search-field{
+    flex:1 1 320px;
+    position:relative;
+  }
+  .search-field input{
+    width:100%;
+    padding:12px 14px 12px 38px;
+    border:1.5px solid var(--rule);
+    border-radius:7px;
+    font-size:15px;
+    font-family:var(--sans);
+    background:#fdfcf9;
+    color:var(--ink);
+  }
+  .search-field input:focus{
+    outline:none;
+    border-color:var(--navy);
+    box-shadow:0 0 0 3px rgba(35,58,94,.12);
+  }
+  .search-field::before{
+    content:"";
+    position:absolute;
+    left:13px; top:50%;
+    width:14px;height:14px;
+    transform:translateY(-50%);
+    border:2px solid var(--muted);
+    border-radius:50%;
+  }
+  .search-field::after{
+    content:"";
+    position:absolute;
+    left:24px; top:63%;
+    width:7px;height:2px;
+    background:var(--muted);
+    transform:rotate(45deg);
+  }
+  select{
+    padding:11px 12px;
+    border:1.5px solid var(--rule);
+    border-radius:7px;
+    font-family:var(--sans);
+    font-size:14px;
+    background:#fdfcf9;
+    color:var(--ink);
+  }
+  select:focus{outline:none;border-color:var(--navy);}
+  .mode-select{
+    background:var(--navy);
+    color:#fff;
+    border-color:var(--navy);
+    font-weight:600;
+    font-size:13.5px;
+  }
+
+  .update-btn{
+    padding:11px 16px;
+    border-radius:7px;
+    border:1.5px solid var(--navy);
+    background:var(--navy);
+    color:#fff;
+    font-family:var(--sans);
+    font-size:13.5px;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .update-btn:hover{background:var(--navy-deep);}
+
+  .upload-panel{
+    max-width:1080px;
+    margin:14px auto 0;
+    padding:0 28px;
+    display:none;
+  }
+  .upload-panel.open{display:block;}
+  .upload-card{
+    background:var(--panel);
+    border:1px dashed var(--rule);
+    border-radius:10px;
+    padding:18px 20px;
+    font-size:13.5px;
+    color:var(--ink);
+    line-height:1.6;
+  }
+  .upload-card h3{
+    margin:0 0 6px;
+    font-family:var(--serif);
+    font-size:16px;
+    color:var(--navy-deep);
+  }
+  .upload-row{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    margin:12px 0 6px;
+    flex-wrap:wrap;
+  }
+  .upload-row input[type=file]{
+    font-size:13px;
+    font-family:var(--sans);
+  }
+  .status-line{
+    font-family:var(--mono);
+    font-size:12px;
+    padding:8px 0 0;
+  }
+  .status-ok{color:var(--ok);}
+  .status-warn{color:var(--warn);}
+  .fallback-box{
+    margin-top:10px;
+    background:var(--brass-soft);
+    border:1px solid var(--rule);
+    border-radius:8px;
+    padding:12px 14px;
+    font-size:13px;
+    display:none;
+  }
+  .fallback-box.show{display:block;}
+
+  .result-count{
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--muted);
+    padding:14px 28px 0;
+    max-width:1080px;
+    margin:0 auto;
+  }
+  .result-count b{color:var(--navy);}
+
+  main{
+    max-width:1080px;
+    margin:0 auto;
+    padding:14px 28px 70px;
+  }
+
+  .empty{
+    text-align:center;
+    padding:60px 20px;
+    color:var(--muted);
+    font-family:var(--serif);
+    font-style:italic;
+  }
+
+  .prof-group{
+    background:var(--panel);
+    border:1px solid var(--rule);
+    border-radius:10px;
+    margin:16px 0;
+    overflow:hidden;
+  }
+  .prof-header{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:12px;
+    padding:14px 18px;
+    background:var(--brass-soft);
+    border-bottom:1px solid var(--rule);
+  }
+  .prof-name{
+    font-family:var(--serif);
+    font-weight:600;
+    font-size:18px;
+    color:var(--navy-deep);
+  }
+  .prof-count{
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--brass);
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    white-space:nowrap;
+  }
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+  }
+  thead th{
+    text-align:left;
+    font-family:var(--mono);
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:.07em;
+    color:var(--muted);
+    padding:8px 18px;
+    border-bottom:1px solid var(--rule);
+  }
+  tbody td{
+    padding:10px 18px;
+    font-size:13.5px;
+    border-bottom:1px solid #ede9dc;
+    vertical-align:top;
+  }
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:#fbf9f3;}
+  .cell-hora{font-family:var(--mono);font-size:12.5px;color:var(--navy);white-space:nowrap;}
+  .cell-sala{font-family:var(--mono);font-size:12px;color:#fff;background:var(--navy);padding:3px 8px;border-radius:5px;display:inline-block;}
+  .cell-curso{font-weight:600;color:var(--ink);}
+  .no-prof{color:#b6803a;font-style:italic;}
+
+  footer{
+    max-width:1080px;
+    margin:0 auto;
+    padding:0 28px 40px;
+    font-size:12px;
+    color:var(--muted);
+    font-family:var(--mono);
+    line-height:1.6;
+  }
+  footer strong{color:var(--ink);}
+
+  @media (max-width:600px){
+    .masthead{padding:26px 18px 20px;}
+    .controls,.result-count,main,footer,.upload-panel{padding-left:16px;padding-right:16px;}
+    .prof-header{flex-direction:column;align-items:flex-start;gap:4px;}
+    thead{display:none;}
+    tbody td{display:block;padding:4px 16px;border-bottom:none;}
+    tbody tr{display:block;padding:10px 0;border-bottom:1px solid #ede9dc;}
+    tbody td::before{
+      content:attr(data-label);
+      font-family:var(--mono);
+      font-size:9.5px;
+      text-transform:uppercase;
+      color:var(--muted);
+      display:block;
+      margin-bottom:2px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="top-row">
+    <div>
+      <div class="eyebrow">Administración de Planta Física · USB</div>
+      <h1>Programación Sede Campus - Bello</h1>
+      <p>Buscador por profesor — encuentra todas sus clases del día sin recorrer salón por salón.</p>
+    </div>
+    <div class="weekday-badge" id="weekdayBadge">— cargando fecha —</div>
+  </div>
+  <div class="meta">
+    <div><span>Espacios cubiertos</span>AUDIE · MIN · AU-1 a AU-5 · AT · SAL</div>
+    <div><span>Registros del día</span><span id="totalCount">—</span></div>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="search-card">
+    <select id="searchMode" class="mode-select">
+      <option value="prof">Buscar profesor</option>
+      <option value="curso">Buscar curso</option>
+    </select>
+    <div class="search-field">
+      <input id="searchInput" type="text" placeholder="Ej. Guzman Alvarez, Correa Mena, Ugarte…" autocomplete="off">
+    </div>
+    <select id="roomFilter">
+      <option value="">Todos los salones</option>
+    </select>
+    <select id="sortMode">
+      <option value="name">Ordenar: nombre</option>
+      <option value="count">Ordenar: más clases</option>
+      <option value="hora">Ordenar: primera hora</option>
+    </select>
+    <button class="update-btn" id="toggleUpload" type="button">Cargar PDF de otro día</button>
+  </div>
+</div>
+
+<div class="upload-panel" id="uploadPanel">
+  <div class="upload-card">
+    <h3>Actualizar con la programación de otro día</h3>
+    <div id="uploadIntro">
+      Intento leer el PDF directamente aquí. Si el reporte fue exportado como texto real, funciona solo. Si el PDF son capturas de pantalla del visor (como el formato que compartiste), el navegador no puede leer el texto de una imagen — en ese caso súbelo en el chat con Claude y te devuelvo esta misma vista, ya actualizada, en un par de minutos.
+    </div>
+    <div class="upload-row">
+      <input type="file" id="pdfInput" accept="application/pdf">
+    </div>
+    <div class="status-line" id="statusLine"></div>
+    <div class="fallback-box" id="fallbackBox">
+      No se detectó texto legible en el PDF (probablemente son capturas de pantalla, como el archivo original). Súbelo directamente en esta conversación — lo transcribo y te regenero el tablero completo con el título, el día de la semana y todos los datos ya listos.
+    </div>
+  </div>
+</div>
+
+<p class="result-count" id="resultCount"></p>
+
+<main id="results"></main>
+
+<footer>
+  <strong>Fuente de estos datos:</strong> reporte EF_038 / EF_0371 (Administración de Planta Física), extraído para el <span id="footerDate"></span>. Algunos apellidos aparecen truncados en el documento original (columna angosta) y se muestran tal como figuran ahí. Las franjas sin profesor visible en el PDF se marcan como "sin profesor" en vez de inventar un nombre.
+  <br><br>
+  <strong>Cómo actualizar cada día:</strong> sube el PDF del día en el chat — leo el reporte, reconstruyo la tabla y te devuelvo este mismo tablero (título, badge del día y datos) ya actualizado.
+</footer>
+
+<script>
+/* ============ FECHA DEL REPORTE — cambiar aquí cada día ============ */
+const REPORT_DATE_ISO = "2026-08-20"; // yyyy-mm-dd
+/* ==================================================================== */
+
+const DATA = [
+["AUDIE","19:00","22:00","DERECHO PROCESAL PEN","GOMEZ CASTRILLON, LUI"],
+["MIN1A","16:00","19:00","INSTALACIONES ESPECI","ESTRADA CASTAÑO, ANDR"],
+["MIN1B","07:00","10:00","LABORATORIO DE ACUST","GOMEZ CADAVID, LUIS E"],
+["MIN1B","13:00","17:00","TALLER DE ELECTRONIC",""],
+["MIN2A","08:00","10:00","FORMACIÓN HUMANA 1","ANDREA FELIPE LOPEZ"],
+["MIN2B","14:00","17:00","SEMILLERO INVESTIGAC","DEVANY BALCAZAR"],
+["AU-1A","08:00","12:00","VOLUMENES","OSSA MORA, HERNANDO A"],
+["AU-1A","13:00","17:00","TECNICAS DE REPRESEN","LOPEZ NIÑO, BYRON LEO"],
+["AU-1B","08:00","12:00","TALLER DE DISEÑO V","CHAVEZ GIRALDO, LUIS"],
+["AU-1B","13:00","17:00","VOLUMENES","OSSA MORA, HERNANDO A"],
+["AU-1B","17:00","21:00","TALLER DE DISEÑO VII","MURILLO GALVIS, MANUE"],
+["AU-1C","13:00","17:00","TALLER DE DISEÑO IX","LONDOÑO MESA, JUAN CA"],
+["AU-1C","17:00","21:00","TALLER DE DISEÑO IX","GUARIN GALLEGO, SANTI"],
+["AU-1D","13:00","17:00","TALLER DE DISEÑO VII","HOLGUIN URREGO, KELTO"],
+["AU-1F","09:00","13:00","GUION Y REDACCION ME","VELEZ LAGOUEYTE, FELI"],
+["AU-1F","15:00","18:00","COMUN.DIG.Y.DISENO.E",""],
+["AU-2A","08:00","10:00","ANTROPOMETRIA","MADRID HENAO, VICTOR"],
+["AU-2A","13:00","15:00","LUDICA Y RECREACION","ROJAS MONTOYA, YURANI"],
+["AU-2A","14:00","16:00","KINESIOLOGIA APLICAD","RESTREPO, LINA MARIA"],
+["AU-2B","08:00","10:00","CONST.D LO SOCI.Y LO","GALLEGO TOBON, CATALI"],
+["AU-2B","15:00","17:00","ENFOQ.DE INVEST.SOCI","GARCIA MORALES, PAULA"],
+["AU-2B","18:00","20:00","INTRODUCCION AL DERE","LEDESMA CANO, MATEO"],
+["AU-2C","08:00","10:00","PRIMEROS AUXILIOS","RESTREPO, LINA MARIA"],
+["AU-2C","10:00","13:00","DERECHO LABORAL","HERNANDEZ GARCIA, SER"],
+["AU-2C","12:00","14:00","PRIMERO AUXILIOS","RESTREPO, LINA MARIA"],
+["AU-2C","14:00","17:00","DERECHO PROCESAL CIV","AVENDAÑO MARTINEZ, DA"],
+["AU-2C","18:00","21:00","EXPRESION ESCRITA","GIRALDO TRUJILLO, JUA"],
+["AU-2C","18:00","22:00","CONSTITUCIONAL COLOM","GOMEZ RESTREPO, MANUE"],
+["AU-2D","07:00","11:00","PROY.PEDAG.COMO PROY","PRENS GARCIA, DIANA P"],
+["AU-2D","12:00","14:00","ELEC-VI.PSICOLOGIA D","PRENS GARCIA, DIANA P"],
+["AU-2D","14:00","18:00","ELEC-III.CONTROL.EMO","PRENS GARCIA, DIANA P"],
+["AU-2D","16:00","18:00","COGNICION Y MOVIMIEN","PRENS GARCIA, DIANA P"],
+["AU-2D","18:00","21:00","DERECHO_ADMIN_COLOMB","RÍOS JIMENEZ, JUAN CA"],
+["AU-2E","18:00","21:00","DERECHO PENAL GENERA","LOPEZ SALAZAR, LINDA"],
+["AU-2F","12:00","15:00","PROYECTO PEDAGOGICO","Ruíz Pabón, Jesús Mar"],
+["AU-2F","15:00","19:00","PROY.PEDAG.Y FORMAC.","HOLGUIN GAVIRIA, MARI"],
+["AU-2F","17:00","19:00","TEORIA CONSTITUCIONA","Basmagi Londoño, Talí"],
+["AU-2G","07:00","09:00","CREATIVIDAD EMPRESAR","ARCOS RODRIGUEZ, FABI"],
+["AU-2G","10:00","12:00","FORMATIVO INTELIGENC","VICTOR (BIENESTAR)"],
+["AU-2H","09:00","13:00","TEORIA CONSTITUCIONA","BASMAGI LONDOÑO, TALI"],
+["AU-2H","15:00","17:00","INTEGRADOR: SISTEMAS","GOMEZ JARAMILLO, YESI"],
+["AU-2H","18:00","20:00","DERECH.HUMAN.Y DCHO.","POLO RIVERA, JESUS DA"],
+["AU-2H","20:00","22:00","EL PROBLEMA DE LA SO","POLO RIVERA, JESUS DA"],
+["AU-3A","08:00","12:00","PERSPECTIVAS Y PROYE","LOPEZ NIÑO, BYRON LEO"],
+["AU-3A","16:00","19:00","PROYECTO PEDAGOGICO","GALLEGO TOBON, CATALI"],
+["AU-3B","14:00","16:00","HUMANISTICA I","HERRERA MEJIA, JHONNY"],
+["AU-3B","16:00","19:00","TRABAJO DE GRADO INF","SANCHEZ ZAPATA, WILBE"],
+["AU-3C","08:00","10:00","HUMANISTICA IV","ARCILA AYALA, HECTOR"],
+["AU-3C","10:00","12:00","HUMANISTICA I","HERRERA MEJIA, JHONNY"],
+["AU-3C","18:00","21:00","MEDIO AMBIENTE Y DES","PEREZ GARCES, HELENA"],
+["AU-3C","20:00","22:00","DERECHO INTERNACIONA",""],
+["AU-3G","10:00","12:00","ELEC-IV.PREP-TEC-TAC","ABAUNZA BARRERA, CARL"],
+["AU-3G","18:00","21:00","DERECHO INTERNACIONA","ALEJANDRO GUTIERREZ"],
+["AU-4A","07:00","10:00","PROYEC.PEDAGOG.Y SAB","VASQUEZ PEREZ, NORA L"],
+["AU-4A","10:00","12:00","ELEC.III-DIMEN.ESPIR","VASQUEZ PEREZ, NORA L"],
+["AU-4A","18:00","21:00","CALCULO","TERRAZA MÁRQUEZ, NOLV"],
+["AU-4B","07:00","10:00","FUNDAMENTOS DE CONTA","LLANO GARCIA, JUAN DA"],
+["AU-4B","10:00","12:00","FORMATIVO DE BIENEST","CANO BEDOYA, VICTOR H"],
+["AU-4B","14:00","18:00","ELEC. V - INCL EN LA",""],
+["AU-4B","16:00","19:00","PROYECTO PEDAGOGICO","GALLEGO TOBON, CATALI"],
+["AU-4C","09:00","12:00","ALGEBRA LINEAL","VARGAS OCHOA, CARLOS"],
+["AU-4C","14:00","18:00","CONTRATOS","CORREA MENA, ADRIANA"],
+["AU-4C","18:00","21:00","DERECHO PROBATORIO","GIL GALLEGO, DANIEL R"],
+["AU-4D","10:00","13:00","FUNDAMENTOS DE ECONO","PEDROZA CORREA, RAUL"],
+["AU-4D","14:00","17:00","COSTOS","CADAVID FONNEGRA, MAR"],
+["AU-4D","18:00","20:00","INVESTIGACION DE MER","GUTIERREZ HENAO, ANDR"],
+["AU-4E","06:00","08:00","INVESTIGACION EN EDU","Sepúlveda Alzate, Cri"],
+["AU-4E","08:00","10:00","INVESTIGACION EN EDU","DIAZ GARCIA, RICARDO"],
+["AU-4E","10:00","12:00","DEPORTES INDIVIDUALE","CARDONA MOLINA, YEISO"],
+["AU-4E","14:00","16:00","DEPORTES INDIVIDUALE","HERNANDEZ VILLA, ALEX"],
+["AU-4E","16:00","18:00","EDUCACION FISICA, DE","RESTREPO, LINA MARIA"],
+["AU-4E","18:00","22:00","IDIOMAS","LONDOÑO COLORADO, NAT"],
+["AU-4F","07:00","10:00","LAS FAMILIAS Y LAS I","GOMEZ PARRA, YANCELLY"],
+["AU-4F","10:00","13:00","CICLO VITAL: 6 A 9 A","GOMEZ PARRA, YANCELLY"],
+["AU-4F","13:00","16:00","CALCULO INTEGRAL","HERNANDEZ VEGA, DANIE"],
+["AU-4G","08:00","10:00","TEORIA Y METODOS DEL","HERNANDEZ VILLA, ALEX"],
+["AU-4G","10:00","12:00","MOTRICIDAD EN BASICA","SALDARRIAGA GUTIERRE"],
+["AU-4G","14:00","18:00","PROY.PEDAGOG.Y CONTE","GONZALEZ GUERRA, YESI"],
+["AU-4G","17:00","19:00","ACUSTICA","TOBON SANTA, JUAN CAM"],
+["AU-5A","06:00","08:00","COMPORTAMIENTO CONSU","ROBINSON USUGA"],
+["AU-5A","08:00","12:00","GESTION DE LA INNOVA","USUGA RUEDA, ROBINSON"],
+["AU-5A","10:00","12:00","GUITARRA","GARCIA VARGAS, ROBINS"],
+["AU-5A","14:00","18:00","PROCESOS INDUSTRIALE","CORREA ALVAREZ, JHON"],
+["AU-5B","10:00","12:00","ELEC-I.CAT.DE. ESTUD","HERNANDEZ VILLA, ALEX"],
+["AU-5B","14:00","16:00","TEORIA Y METODOS DEL","Sepúlveda Alzate, Cri"],
+["AU-5B","16:00","19:00","PROYECTO PEDAGOGICO","MOJICA VÉLEZ, CARLOS"],
+["AU-5C","07:00","10:00","CICLO VITAL: 0 A 3 A","MAZO GUTIERREZ, MARY"],
+["AU-5C","10:00","12:00","TEORIA DE LA CRIANZA","MAZO GUTIERREZ, MARY"],
+["AU-5C","15:00","17:00","FILOSOFIA DEL DERECH","POLO RIVERA, JESUS DA"],
+["AU-5C","18:00","21:00","DERECHO PROCESAL LAB","HERNANDEZ GARCIA, SER"],
+["AU-5D","09:00","12:00","METODOS NUMERICOS","MARQUEZ FERNANDEZ, CA"],
+["AU-5D","17:00","19:00","MOTRICIDAD EN EDUCAC","ROJAS MONTOYA, YURANI"],
+["AU-5E","14:00","16:00","SEGUIMIENTO FORMATIVOS BIENEST","SARA RIOS"],
+["AU-5E","16:00","19:00","HUMANISTICA VII","CORDOBA ARBOLEDA, MAURICIO"],
+["AU-5F","08:00","10:00","DERECHO COMERCIAL","GRAJALES MONTOYA, NAN"],
+["AU-5F","10:00","12:00","DERECHO CONSTITUCION","GRAJALES MONTOYA, NAN"],
+["AU-5F","13:00","15:00","INTEGRADOR: SISTEMAS","JARAMILLO CIRO, MARGA"],
+["AU-5F","16:00","19:00","PROYECTO PEDAGOGICO","GALLEGO TOBON, CATALI"],
+["AU-5G","07:00","11:00","ESTUDIOS AMBIENTALES","JARAMILLO CIRO, MARGA"],
+["AU-5G","14:00","16:00","FISICA II","REVUELTAS, ALEXANDER"],
+["AU-5G","16:00","19:00","CALCULO MULTIVARIADO","Espinoza Casta, Rugge"],
+["AU-5H","07:00","10:00","NEGOCIACION INTERNAC","BOTERO VASQUEZ, MARIA"],
+["AU-5H","10:00","13:00","PROYECTO PEDAGOGICO","DIAZ GARCIA, RICARDO"],
+["AU-5H","14:00","16:00","ELEC.II-DESAR.ART.Y","LEMA ARDILA, JUAN EST"],
+["AU-5H","16:00","19:00","TRABAJO DE GRADO INF","LEMA ARDILA, JUAN EST"],
+["AU-5I","10:00","13:00","GESTION DE OPERACION","ORTEGON RIVEROS, WILS"],
+["AU-5I","17:00","19:00","PROYECTO PEDAGOGICO","Ruíz Pabón, Jesús Mar"],
+["AT-1B","09:00","12:00","PENSAMIENTO PRODUCTI",""],
+["AT-2A","07:00","10:00","SISTEMAS EMBEBIDOS","MENESES BENAVIDES, GU"],
+["AT-2A","10:00","13:00","DISEÑO Y PROTOTIPADO","MENESES BENAVIDES, GU"],
+["AT-2A","14:00","16:00","FISICA II","REVUELTAS, ALEXANDER"],
+["AT-2B","07:00","09:00","SEMINARIO DE GRADO 1","GUTIERREZ DIAZ, JORGE"],
+["AT-2B","16:00","19:00","LOGICAS EXPERIENCIA","ARANGO RESTREPO, JUAN"],
+["AT-2C","08:00","12:00","PENSAMIENTO ANALOGO","VILLA LONDOÑO, EDISSO"],
+["AT-2C","14:00","17:00","PENSAMIENTO ESTRATEG",""],
+["AT-2F","16:00","19:00","SALUD FISICA Y MENTA","GOMEZ GOMEZ, ALBA STE"],
+["SAL-1","08:00","10:00","DESARROLLO DE DATOS","CASTRO CASTRO, CARLOS"],
+["SAL-1","14:00","17:00","BODEGAS DE DATOS E I","SANCHEZ PEREZ, LUIS F"],
+["SAL-1","16:00","19:00","REFUERZO SONORO","GOMEZ JARAMILLO, JUAN"],
+["SAL-2","10:00","13:00","PLAN.DE.CONTEN.DIG.M","BETANCUR CIFUENTES, J"],
+["SAL-2","13:00","15:00","CIBERNETICA I","VARGAS OCHOA, CARLOS"],
+["SAL-2","16:00","18:00","INTELIGENCIA COMPUTA","HERNANDEZ MARULANDA"],
+["SAL-3","08:00","10:00","ELABORACION DE TEXTO","DURANGO VANEGAS, CLAU"],
+["SAL-3","10:00","13:00","REQUISITOS DE SOFTWA","DURANGO VANEGAS, CLAU"],
+["SAL-3","14:00","18:00","CONSTRUCCION DE SOFT","CASTRO CASTRO, CARLOS"],
+["SAL-4","10:00","13:00","ARQUITECTURA DE DATO","CASTRO CASTRO, CARLOS"],
+["SAL-4","14:00","18:00","PENSAMIENTO DIGITAL","ESPINEL CRUZ, IVAN DA"],
+["SAL-5","07:00","09:00","SEMINARIO DE PORTAFO","CATAÑO OSPINA, ANA MA"],
+["SAL-5","09:00","11:00","SEMINARIO DE PORTAFO","CATAÑO OSPINA, ANA MA"],
+["SAL-5","11:00","13:00","SEMINARIO DE PORTAFO","CATAÑO OSPINA, ANA MA"],
+["SAL-5","14:00","18:00","DIAGRAMACION Y COMPO","CATAÑO OSPINA, ANA MA"],
+["SAL-5","18:00","20:00","GERENCIA TRIBUTARIA","LLANO GARCIA, JUAN DA"],
+["SAL-6","07:00","10:00","ENF II-EXCEL HERRAMI","LOPEZ ANGEL, JUAN CAR"],
+["SAL-6","10:00","13:00","PRESUPUESTO","LOPEZ ANGEL, JUAN CAR"],
+["SAL-6","18:00","20:00","GERENCIA INTEGRAL DE","GOMEZ TORRES, CARLOS"],
+];
+
+function norm(s){
+  return (s||"").toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+}
+
+/* ---------- Encabezado: día de la semana + fecha ---------- */
+(function setWeekday(){
+  const [y,m,d] = REPORT_DATE_ISO.split("-").map(Number);
+  const dt = new Date(y, m-1, d);
+  const weekdayFmt = new Intl.DateTimeFormat("es-CO", {weekday:"long"});
+  const dateFmt = new Intl.DateTimeFormat("es-CO", {day:"2-digit", month:"long", year:"numeric"});
+  const weekday = weekdayFmt.format(dt);
+  const dateStr = dateFmt.format(dt);
+  document.getElementById("weekdayBadge").innerHTML = `<b>${weekday}</b>&nbsp;· ${dateStr}`;
+  document.getElementById("footerDate").textContent = `${weekday}, ${dateStr}`;
+})();
+
+/* ---------- Filtros / render ---------- */
+const rooms = [...new Set(DATA.map(d=>d[0]))].sort();
+const roomSelect = document.getElementById("roomFilter");
+rooms.forEach(r=>{
+  const opt = document.createElement("option");
+  opt.value = r; opt.textContent = r;
+  roomSelect.appendChild(opt);
+});
+document.getElementById("totalCount").textContent = DATA.length + " franjas";
+
+const searchInput = document.getElementById("searchInput");
+const sortMode = document.getElementById("sortMode");
+const searchModeEl = document.getElementById("searchMode");
+const resultsEl = document.getElementById("results");
+const countEl = document.getElementById("resultCount");
+
+// índice de cada fila: 0 sala, 1 inicio, 2 fin, 3 curso, 4 profesor
+function groupBy(rows, fieldIndex){
+  const map = new Map();
+  rows.forEach(r=>{
+    const key = r[fieldIndex] && r[fieldIndex].trim() ? r[fieldIndex].trim() : "__VACIO__";
+    if(!map.has(key)) map.set(key, []);
+    map.get(key).push(r);
+  });
+  return map;
+}
+
+function updatePlaceholder(){
+  searchInput.placeholder = searchModeEl.value === "curso"
+    ? "Ej. Cálculo Integral, Derecho Penal, Humanística…"
+    : "Ej. Guzman Alvarez, Correa Mena, Ugarte…";
+}
+
+function render(){
+  const mode = searchModeEl.value; // "prof" o "curso"
+  const matchField = mode === "curso" ? 3 : 4;
+  const groupField = mode === "curso" ? 3 : 4;
+  const otherField = mode === "curso" ? 4 : 3; // el campo que se muestra en la tabla como dato extra
+  const q = norm(searchInput.value.trim());
+  const room = roomSelect.value;
+
+  let rows = DATA.filter(r=>{
+    const matchesRoom = !room || r[0] === room;
+    const matchesQ = !q || norm(r[matchField]).includes(q);
+    return matchesRoom && matchesQ;
+  });
+
+  const grouped = groupBy(rows, groupField);
+  let entries = [...grouped.entries()];
+
+  if(sortMode.value === "name"){
+    entries.sort((a,b)=>{
+      if(a[0]==="__VACIO__") return 1;
+      if(b[0]==="__VACIO__") return -1;
+      return a[0].localeCompare(b[0]);
+    });
+  } else if(sortMode.value === "count"){
+    entries.sort((a,b)=> b[1].length - a[1].length);
+  } else if(sortMode.value === "hora"){
+    entries.sort((a,b)=>{
+      const ah = Math.min(...a[1].map(x=>x[1]));
+      const bh = Math.min(...b[1].map(x=>x[1]));
+      return ah.localeCompare(bh);
+    });
+  }
+
+  const unidad = mode === "curso" ? "curso(s)" : "profesor(es)";
+  countEl.innerHTML = `<b>${rows.length}</b> franja(s) · <b>${entries.length}</b> ${unidad}${q?` para “${searchInput.value.trim()}”`:""}`;
+
+  if(entries.length === 0){
+    resultsEl.innerHTML = `<div class="empty">Sin coincidencias. Prueba con otro término, sin tildes.</div>`;
+    return;
+  }
+
+  const otherLabel = mode === "curso" ? "Profesor" : "Curso";
+  const emptyOtherMsg = mode === "curso" ? "Sin profesor asignado en el reporte" : "—";
+  const vacioMsg = mode === "curso" ? "Curso sin nombre legible en el reporte" : "Sin profesor asignado en el reporte";
+
+  resultsEl.innerHTML = entries.map(([key, items])=>{
+    items.sort((a,b)=> a[1].localeCompare(b[1]));
+    const displayName = key === "__VACIO__" ? `<span class="no-prof">${vacioMsg}</span>` : key;
+    const rowsHtml = items.map(row=>{
+      const otherVal = row[otherField] && row[otherField].trim() ? row[otherField] : `<span class="no-prof">${emptyOtherMsg}</span>`;
+      return `
+      <tr>
+        <td class="cell-hora" data-label="Hora">${row[1]}–${row[2]}</td>
+        <td data-label="Salón"><span class="cell-sala">${row[0]}</span></td>
+        <td class="cell-curso" data-label="${otherLabel}">${otherVal}</td>
+      </tr>
+    `;}).join("");
+    return `
+      <div class="prof-group">
+        <div class="prof-header">
+          <div class="prof-name">${displayName}</div>
+          <div class="prof-count">${items.length} clase${items.length>1?"s":""} hoy</div>
+        </div>
+        <table>
+          <thead><tr><th>Hora</th><th>Salón</th><th>${otherLabel}</th></tr></thead>
+          <tbody>${rowsHtml}</tbody>
+        </table>
+      </div>
+    `;
+  }).join("");
+}
+
+searchInput.addEventListener("input", render);
+roomSelect.addEventListener("change", render);
+sortMode.addEventListener("change", render);
+searchModeEl.addEventListener("change", ()=>{ updatePlaceholder(); render(); });
+updatePlaceholder();
+render();
+
+/* ---------- Panel de carga de PDF ---------- */
+const toggleUpload = document.getElementById("toggleUpload");
+const uploadPanel = document.getElementById("uploadPanel");
+toggleUpload.addEventListener("click", ()=>{
+  uploadPanel.classList.toggle("open");
+});
+
+const pdfInput = document.getElementById("pdfInput");
+const statusLine = document.getElementById("statusLine");
+const fallbackBox = document.getElementById("fallbackBox");
+
+let pdfjsLoadPromise = null;
+function loadPdfJs(){
+  if(pdfjsLoadPromise) return pdfjsLoadPromise;
+  pdfjsLoadPromise = new Promise((resolve, reject)=>{
+    const s = document.createElement("script");
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
+    s.onload = ()=> resolve();
+    s.onerror = ()=> reject(new Error("No se pudo cargar pdf.js desde el CDN"));
+    document.body.appendChild(s);
+  });
+  return pdfjsLoadPromise;
+}
+
+pdfInput.addEventListener("change", async (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  fallbackBox.classList.remove("show");
+  statusLine.textContent = "Cargando lector de PDF…";
+  statusLine.className = "status-line";
+
+  try{
+    await loadPdfJs();
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    statusLine.textContent = "Leyendo PDF…";
+    const buf = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({data:buf}).promise;
+    let totalChars = 0;
+    for(let i=1;i<=pdf.numPages;i++){
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      totalChars += content.items.reduce((sum,it)=> sum + (it.str||"").trim().length, 0);
+    }
+    if(totalChars < 40){
+      // Es prácticamente una imagen: no hay capa de texto real
+      statusLine.textContent = "El PDF no tiene texto legible (parece una captura de pantalla).";
+      statusLine.classList.add("status-warn");
+      fallbackBox.classList.add("show");
+    } else {
+      statusLine.textContent = `Se detectó texto en el PDF (${pdf.numPages} página(s)), pero la estructura de tablas de este reporte cambia de un día a otro y aún no la reconstruyo automáticamente con certeza.`;
+      statusLine.classList.add("status-warn");
+      fallbackBox.classList.add("show");
+    }
+  }catch(err){
+    statusLine.textContent = "No se pudo leer el archivo (o el lector de PDF no cargó por la red). Usa la opción del chat.";
+    statusLine.classList.add("status-warn");
+    fallbackBox.classList.add("show");
+  }
+});
+</script>
+
+</body>
+</html>
