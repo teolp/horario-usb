@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programación Sede Campus - Bello</title>
+<style>
+  :root{
+    --bg:#0a0a0b;
+    --bg-card:#161618;
+    --bg-elev:#1f2023;
+    --rule:#2b2c30;
+    --ink:#f2f1ee;
+    --muted:#9a9a9f;
+    --accent:#f2b84b;
+    --accent-deep:#c9922f;
+    --accent-soft:rgba(242,184,75,.14);
+    --ok:#6bc496;
+    --warn:#e0895c;
+    --mono:"IBM Plex Mono","SFMono-Regular",Menlo,Consolas,monospace;
+    --sans:"IBM Plex Sans","Segoe UI",Arial,sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .masthead{
+    background:linear-gradient(180deg,#000000,#111214);
+    color:var(--ink);
+    padding:36px 28px 26px;
+    border-bottom:3px solid var(--accent);
+  }
+  .masthead .top-row{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .masthead .eyebrow{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin-bottom:10px;
+  }
+  .masthead h1{
+    font-weight:700;
+    font-size:clamp(24px,3.4vw,34px);
+    margin:0 0 4px;
+    line-height:1.1;
+    letter-spacing:-.01em;
+  }
+  .weekday-badge{
+    display:inline-flex;
+    align-items:baseline;
+    gap:8px;
+    background:var(--accent-soft);
+    border:1px solid rgba(242,184,75,.35);
+    border-radius:999px;
+    padding:6px 14px;
+    font-family:var(--mono);
+    font-size:12.5px;
+    color:var(--accent);
+    text-transform:capitalize;
+    white-space:nowrap;
+  }
+  .weekday-badge b{color:#fff;font-size:13.5px;}
+  .masthead p{
+    margin:6px 0 0;
+    color:var(--muted);
+    font-size:14px;
+    max-width:640px;
+  }
+  .masthead .meta{
+    display:flex;
+    gap:22px;
+    margin-top:18px;
+    flex-wrap:wrap;
+  }
+  .masthead .meta div{
+    font-family:var(--mono);
+    font-size:11.5px;
+    color:#d8d6cf;
+    border-left:2px solid var(--accent);
+    padding-left:10px;
+  }
+  .masthead .meta span{display:block;color:#7c7d82;text-transform:uppercase;letter-spacing:.08em;font-size:9.5px;margin-bottom:2px;}
+
+  .controls{
+    max-width:1080px;
+    margin:-22px auto 0;
+    padding:0 28px;
+    position:relative;
+    z-index:3;
+  }
+  .search-card{
+    background:var(--bg-card);
+    border:1px solid var(--rule);
+    border-radius:12px;
+    box-shadow:0 18px 34px -22px rgba(0,0,0,.7);
+    padding:18px 20px;
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+  .search-field{
+    flex:1 1 320px;
+    position:relative;
+  }
+  .search-field input{
+    width:100%;
+    padding:12px 14px 12px 38px;
+    border:1.5px solid var(--rule);
+    border-radius:8px;
+    font-size:15px;
+    font-family:var(--sans);
+    background:var(--bg-elev);
+    color:var(--ink);
+  }
+  .search-field input::placeholder{color:#75767b;}
+  .search-field input:focus{
+    outline:none;
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px var(--accent-soft);
+  }
+  .search-field::before{
+    content:"";
+    position:absolute;
+    left:13px; top:50%;
+    width:14px;height:14px;
+    transform:translateY(-50%);
+    border:2px solid var(--muted);
+    border-radius:50%;
+  }
+  .search-field::after{
+    content:"";
+    position:absolute;
+    left:24px; top:63%;
+    width:7px;height:2px;
+    background:var(--muted);
+    transform:rotate(45deg);
+  }
+  select{
+    padding:11px 12px;
+    border:1.5px solid var(--rule);
+    border-radius:8px;
+    font-family:var(--sans);
+    font-size:14px;
+    background:var(--bg-elev);
+    color:var(--ink);
+  }
+  select:focus{outline:none;border-color:var(--accent);}
+  .mode-select{
+    background:var(--accent);
+    color:#1a1300;
+    border-color:var(--accent);
+    font-weight:700;
+    font-size:13.5px;
+  }
+
+  .update-btn{
+    padding:11px 16px;
+    border-radius:8px;
+    border:1.5px solid var(--rule);
+    background:var(--bg-elev);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:13.5px;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .update-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+  .upload-panel{
+    max-width:1080px;
+    margin:14px auto 0;
+    padding:0 28px;
+    display:none;
+  }
+  .upload-panel.open{display:block;}
+  .upload-card{
+    background:var(--bg-card);
+    border:1px dashed var(--rule);
+    border-radius:12px;
+    padding:18px 20px;
+    font-size:13.5px;
+    color:var(--ink);
+    line-height:1.6;
+  }
+  .upload-card h3{
+    margin:0 0 6px;
+    font-size:16px;
+    font-weight:700;
+    color:var(--accent);
+  }
+  .upload-row{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    margin:12px 0 6px;
+    flex-wrap:wrap;
+  }
+  .upload-row input[type=file]{
+    font-size:13px;
+    font-family:var(--sans);
+    color:var(--muted);
+  }
+  .status-line{
+    font-family:var(--mono);
+    font-size:12px;
+    padding:8px 0 0;
+  }
+  .status-ok{color:var(--ok);}
+  .status-warn{color:var(--warn);}
+  .fallback-box{
+    margin-top:10px;
+    background:var(--bg-elev);
+    border:1px solid var(--rule);
+    border-radius:8px;
+    padding:12px 14px;
+    font-size:13px;
+    display:none;
+    color:var(--muted);
+  }
+  .fallback-box.show{display:block;}
+
+  .result-count{
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--muted);
+    padding:14px 28px 0;
+    max-width:1080px;
+    margin:0 auto;
+  }
+  .result-count b{color:var(--accent);}
+
+  main{
+    max-width:1080px;
+    margin:0 auto;
+    padding:14px 28px 70px;
+  }
+
+  .empty{
+    text-align:center;
+    padding:60px 20px;
+    color:var(--muted);
+    font-style:italic;
+  }
+
+  .prof-group{
+    background:var(--bg-card);
+    border:1px solid var(--rule);
+    border-radius:12px;
+    margin:16px 0;
+    overflow:hidden;
+  }
+  .prof-header{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:12px;
+    padding:14px 18px;
+    background:var(--bg-elev);
+    border-bottom:1px solid var(--rule);
+  }
+  .prof-name{
+    font-weight:700;
+    font-size:18px;
+    color:var(--ink);
+  }
+  .prof-name .alias{
+    display:block;
+    font-weight:400;
+    font-size:12px;
+    color:var(--accent);
+    margin-top:2px;
+  }
+  .prof-count{
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--accent);
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    white-space:nowrap;
+  }
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+  }
+  thead th{
+    text-align:left;
+    font-family:var(--mono);
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:.07em;
+    color:var(--muted);
+    padding:8px 18px;
+    border-bottom:1px solid var(--rule);
+  }
+  tbody td{
+    padding:10px 18px;
+    font-size:13.5px;
+    border-bottom:1px solid #202124;
+    vertical-align:top;
+    color:var(--ink);
+  }
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:var(--bg-elev);}
+  .cell-hora{font-family:var(--mono);font-size:12.5px;color:var(--accent);white-space:nowrap;}
+  .cell-sala{font-family:var(--mono);font-size:12px;color:#1a1300;background:var(--accent);padding:3px 8px;border-radius:5px;display:inline-block;font-weight:600;}
+  .cell-curso{font-weight:600;color:var(--ink);}
+  .cell-curso .alias-inline{display:block;font-weight:400;font-size:11.5px;color:var(--muted);margin-top:1px;}
+  .no-prof{color:var(--warn);font-style:italic;}
+
+  footer{
+    max-width:1080px;
+    margin:0 auto;
+    padding:0 28px 40px;
+    font-size:12px;
+    color:var(--muted);
+    font-family:var(--mono);
+    line-height:1.6;
+  }
+  footer strong{color:var(--ink);}
+
+  @media (max-width:600px){
+    .masthead{padding:26px 18px 20px;}
+    .controls,.result-count,main,footer,.upload-panel{padding-left:16px;padding-right:16px;}
+    .prof-header{flex-direction:column;align-items:flex-start;gap:4px;}
+    thead{display:none;}
+    tbody td{display:block;padding:4px 16px;border-bottom:none;}
+    tbody tr{display:block;padding:10px 0;border-bottom:1px solid #202124;}
+    tbody td::before{
+      content:attr(data-label);
+      font-family:var(--mono);
+      font-size:9.5px;
+      text-transform:uppercase;
+      color:var(--muted);
+      display:block;
+      margin-bottom:2px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="top-row">
+    <div>
+      <div class="eyebrow">Administración de Planta Física · USB</div>
+      <h1>Programación Sede Campus - Bello</h1>
+      <p>Buscador por profesor o por curso — encuentra todas las clases del día sin recorrer salón por salón.</p>
+    </div>
+    <div class="weekday-badge" id="weekdayBadge">— cargando fecha —</div>
+  </div>
+  <div class="meta">
+    <div><span>Espacios cubiertos</span>AUDIE · MIN · AU-1 a AU-5 · AT · SAL</div>
+    <div><span>Registros del día</span><span id="totalCount">—</span></div>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="search-card">
+    <select id="searchMode" class="mode-select">
+      <option value="prof">Buscar profesor</option>
+      <option value="curso">Buscar curso</option>
+    </select>
+    <div class="search-field">
+      <input id="searchInput" type="text" placeholder="Ej. Guzman Alvarez, Correa Mena, Ugarte…" autocomplete="off">
+    </div>
+    <select id="roomFilter">
+      <option value="">Todos los salones</option>
+    </select>
+    <select id="sortMode">
+      <option value="name">Ordenar: nombre</option>
+      <option value="count">Ordenar: más clases</option>
+      <option value="hora">Ordenar: primera hora</option>
+    </select>
+    <button class="update-btn" id="toggleUpload" type="button">Cargar PDF de otro día</button>
+  </div>
+</div>
+
+<div class="upload-panel" id="uploadPanel">
+  <div class="upload-card">
+    <h3>Actualizar con la programación de otro día</h3>
+    <div id="uploadIntro">
+      Intento leer el PDF directamente aquí. Si el reporte fue exportado como texto real, funciona solo. Si el PDF son capturas de pantalla del visor (como el formato que compartiste), el navegador no puede leer el texto de una imagen — en ese caso súbelo en el chat con Claude y te devuelvo esta misma vista, ya actualizada, en un par de minutos.
+    </div>
+    <div class="upload-row">
+      <input type="file" id="pdfInput" accept="application/pdf">
+    </div>
+    <div class="status-line" id="statusLine"></div>
+    <div class="fallback-box" id="fallbackBox">
+      No se detectó texto legible en el PDF (probablemente son capturas de pantalla, como el archivo original). Súbelo directamente en esta conversación — lo transcribo y te regenero el tablero completo con el título, el día de la semana y todos los datos ya listos.
+    </div>
+  </div>
+</div>
+
+<p class="result-count" id="resultCount"></p>
+
+<main id="results"></main>
+
+<footer>
+  <strong>Fuente de estos datos:</strong> reporte EF_038 / EF_0371 (Administración de Planta Física), extraído para el <span id="footerDate"></span>. Algunos apellidos aparecen truncados en el documento original (columna angosta) y se muestran tal como figuran ahí. Las franjas sin profesor visible en el PDF se marcan como "sin profesor" en vez de inventar un nombre. Algunas anotaciones escritas a mano sobre el PDF no se pudieron ubicar con certeza en su celda y se dejaron fuera.
+  <br><br>
+  <strong>Cómo actualizar cada día:</strong> sube el PDF del día en el chat — leo el reporte, reconstruyo la tabla y te devuelvo este mismo tablero (título, badge del día y datos) ya actualizado.
+</footer>
+
+<script>
+/* ============ FECHA DEL REPORTE — cambiar aquí cada día ============ */
+const REPORT_DATE_ISO = "2026-08-22"; // yyyy-mm-dd
+/* ==================================================================== */
+
+/* Alias de cursos: cuando un curso tiene otro nombre por el que también
+   se le conoce, se agrega aquí. La clave debe ir en MAYÚSCULAS tal como
+   aparece en DATA. La búsqueda por curso encuentra por cualquiera de los
+   nombres, y el nombre alterno se muestra junto al curso en la tabla. */
+const COURSE_ALIASES = {
+  "LECTURA Y ESCRITURA": ["DIDÁCTICA I", "DIDACTICA 1"]
+};
+
+const DATA = [
+["AUDIE","10:00","13:00","DERECHO LABORAL","HERNANDEZ GARCIA, SER"],
+["MIN1A","05:00","06:00","PROYECTO DE GRADO","JARAMILLO CIRO, MARGA"],
+["MIN1A","08:00","10:00","FRAGMENTOS URBANOS","VALENCIA BETANCUR, OS"],
+["MIN1A","10:00","13:00","LOGICA ESTRUCTURAL","OCHOA TEJADA, JUAN JO"],
+["MIN1B","07:00","09:00","GESTION CULTURAL",""],
+["MIN1B","09:00","12:00","CONCURSO DE ARBITRAJ","CATALINA MERINO"],
+["MIN2A","08:00","11:00","TERMODINAMICA","VELASQUEZ SIERRA, EVE"],
+["MIN2B","08:00","13:00","INGLES I","LONDOÑO COLORADO, NAT"],
+["AU-2A","07:00","09:00","GEOPOLITICA Y LEGISL","GARCIA MUÑOZ, YARITZA"],
+["AU-2A","10:00","12:00","LENGUAJES MUSEOGRAFI",""],
+["AU-2A","12:00","14:00","GENEROS LITERARIOS I","CASTELLANO ASCENCIO"],
+["AU-2A","14:00","16:00","PEDAGOGIAS SOCIALES","CASTELLANO ASCENCIO"],
+["AU-2B","07:00","10:00","INTERPRET. Y ARGUMEN","RIOS JIMENEZ, JUAN CA"],
+["AU-2B","10:00","13:00","DERECHO PENAL ESPECI","LOPEZ SALAZAR, LINDA"],
+["AU-2B","14:00","16:00","EPISTEMOLOGIA Y COGN","RIOS JIMENEZ, JUAN CA"],
+["AU-2C","07:00","10:00","OBLIGACIONES","GIL GALLEGO, DANIEL R"],
+["AU-2C","10:00","12:00","ENFOQ.DE INVEST.SOCI","GARCIA MORALES, PAULA"],
+["AU-2D","07:00","11:00","CONTRATOS","CORREA MENA, ADRIANA"],
+["AU-2D","11:00","14:00","DERECHO COMERCIAL GE","CORREA MENA, ADRIANA"],
+["AU-2D","14:00","17:00","DERECHO COMERCIAL GR","ADRIANA CORREA"],
+["AU-2E","08:00","11:00","BIENES",""],
+["AU-2E","11:00","13:00","TECNICAS DE LA ORALI","GOMEZ CASTRILLON, LUI"],
+["AU-2E","13:00","16:00","TEORIA GENERAL DEL P","GIL GALLEGO, DANIEL R"],
+["AU-2F","11:00","13:00","SOCIOLOGIA JURIDICA","POLO RIVERA, JESUS DA"],
+["AU-2F","13:00","16:00","DERECHO CIVIL GENERA",""],
+["AU-2G","07:00","10:00","GERENCIA ESTRATEGICA","GUTIERREZ HENAO, ANDR"],
+["AU-2G","10:00","13:00","DERECHO LABORAL","SERGIO LUIS HDEZ"],
+["AU-2G","14:00","17:00","DERECHO LABORAL","SERGIO HERNANDEZ"],
+["AU-2H","06:00","10:00","PROYECTO DE GRADO","PEREZ ZAPATA, DAVID"],
+["AU-2H","10:00","12:00","FILOSOFIA DEL DERECH","POLO RIVERA, JESUS DA"],
+["AU-2H","13:00","15:00","ENFOQUE DE LA INVEST","GOMEZ RESTREPO, MANUE"],
+["AU-3A","07:00","10:00","NEURO DESARROLLO INF","VASQUEZ PEREZ, NORA L"],
+["AU-3A","10:00","12:00","TRABAJO DE GRADO LIN","VASQUEZ PEREZ, NORA L"],
+["AU-3A","14:00","16:00","LITERATURA INFANTIL","VASQUEZ PEREZ, NORA L"],
+["AU-3B","08:00","12:00","INTRODUCCION AL DERE","GOMEZ RESTREPO, MANUE"],
+["AU-3C","08:00","11:00","TITULOS VALORES","ANZOLA SANCHEZ, JONAT"],
+["AU-3C","11:00","14:00","SOCIEDADES","ANZOLA SANCHEZ, JONAT"],
+["AU-3G","07:00","10:00","PRODUCCION Y MONTAJE",""],
+["AU-3G","13:00","15:00","ARTES OBJETUALES","HOLGUIN GAVIRIA, MARI"],
+["AU-4A","08:00","12:00","CONVENIO ALAMOS","MAESTRE CORREA, LIZAM"],
+["AU-4B","09:00","11:00","DIDACTICA II: COMPRE",""],
+["AU-4C","07:00","10:00","TEORIA GENERAL DEL N",""],
+["AU-4D","07:00","10:00","ESTADOS FINANCIEROS","CADAVID FONNEGRA, MAR"],
+["AU-4D","10:00","13:00","ETICA DEL CONTADOR P","CARO PEDREROS, DAVID"],
+["AU-4E","07:00","09:00","SEMANTICA Y PRAGMATI","CASTELLANO ASCENCIO"],
+["AU-4E","10:00","13:00","CICLO VITAL: 3 A 6 A",""],
+["AU-4E","14:00","16:00","ETICA Y ESTETICA",""],
+["AU-4F","07:00","14:00","PRACTICA","HERRERA MEJIA, JHONNY"],
+["AU-4G","07:00","10:00","TRADICION.Y TENDENCI","TANGARIFE COLORADO, L"],
+["AU-4G","10:00","12:00","TALLER DE CREACION P",""],
+["AU-4G","14:00","16:00","ARTE Y DIDACTICA",""],
+["AU-5A","07:00","09:00","FILOSOFIA DEL LENGUA","MOJICA VÉLEZ, CARLOS"],
+["AU-5A","09:00","11:00","LITERATURA LATINOAME","MOJICA VÉLEZ, CARLOS"],
+["AU-5A","11:00","13:00","LITERATURA COLOMBIAN","MOJICA VÉLEZ, CARLOS"],
+["AU-5A","14:00","16:00","ESTUDIOS SOBRE EL DI","DIEZ GIRALDO, ANDRES"],
+["AU-5A","16:00","18:00","PROYECTO DE GRADO","CORREA ALVAREZ, JHON"],
+["AU-5B","07:00","09:00","DIDACTICA DE LA LITE","MORENO CARDENAS, KELL"],
+["AU-5B","09:00","11:00","PSICOLINGUISTICA","MORENO CARDENAS, KELL"],
+["AU-5C","07:00","10:00","DERECHO PROCESAL CIV","AVENDAÑO MARTINEZ, DA"],
+["AU-5C","10:00","12:00","INTRODUCCION A LA IN",""],
+["AU-5C","13:00","15:00","TALLER DE CREACION:","SANCHEZ ZAPATA, WILBE"],
+["AU-5D","10:00","12:00","ARTES REPRESENTATIVA","SANCHEZ ZAPATA, WILBE"],
+["AU-5D","13:00","14:00","PROYECTO DE GRADO","DURANGO VANEGAS, CLAU"],
+["AU-5D","14:00","16:00","ARTES LITERARIAS",""],
+["AU-5E","08:00","12:00","PRACTICA PROFESIONALIZANTE","USUGA RUEDA, ROBINSON MARTIN"],
+["AU-5F","07:00","09:00","MACROECONOMIA","VILLEGAS MONTOYA, LUI"],
+["AU-5F","10:00","13:00","FUNDAMENTOS DE ECONO","VILLEGAS MONTOYA, LUI"],
+["AU-5G","07:00","10:00","GEOMETRIA VECTORIAL","Espinoza Casta, Rugge"],
+["AU-5H","07:00","10:00","CONSULTORIO CONTABLE","CARO PEDREROS, DAVID"],
+["AU-5H","10:00","13:00","CONTABILIDAD FUENTES","CADAVID FONNEGRA, MAR"],
+["AT-2A","14:00","15:00","PROYECTO DE GRADO","BETANCUR CIFUENTES, J"],
+["SAL-3","07:00","10:00","GERENCIA FINANCIERA","GOMEZ TORRES, CARLOS"],
+["SAL-3","10:00","12:00","GERENCIA INTEGRAL DE","GOMEZ TORRES, CARLOS"],
+["SAL-5","08:00","11:00","REPRESENTACION DIGIT","BETANCUR CARVAJAL, PA"],
+["SAL-5","11:00","14:00","REPRESENTACION DIGIT","BETANCUR CARVAJAL, PA"],
+["SAL-6","07:00","10:00","COSTOS","VELEZ MORALES, FRANCI"],
+["SAL-6","10:00","13:00","FINANZAS CORPORATIVA","VELEZ MORALES, FRANCI"],
+];
+
+function norm(s){
+  return (s||"").toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+}
+
+function getAliases(curso){
+  const key = (curso||"").trim().toUpperCase();
+  return COURSE_ALIASES[key] || null;
+}
+
+/* ---------- Encabezado: día de la semana + fecha ---------- */
+(function setWeekday(){
+  const [y,m,d] = REPORT_DATE_ISO.split("-").map(Number);
+  const dt = new Date(y, m-1, d);
+  const weekdayFmt = new Intl.DateTimeFormat("es-CO", {weekday:"long"});
+  const dateFmt = new Intl.DateTimeFormat("es-CO", {day:"2-digit", month:"long", year:"numeric"});
+  const weekday = weekdayFmt.format(dt);
+  const dateStr = dateFmt.format(dt);
+  document.getElementById("weekdayBadge").innerHTML = `<b>${weekday}</b>&nbsp;· ${dateStr}`;
+  document.getElementById("footerDate").textContent = `${weekday}, ${dateStr}`;
+})();
+
+/* ---------- Filtros / render ---------- */
+const rooms = [...new Set(DATA.map(d=>d[0]))].sort();
+const roomSelect = document.getElementById("roomFilter");
+rooms.forEach(r=>{
+  const opt = document.createElement("option");
+  opt.value = r; opt.textContent = r;
+  roomSelect.appendChild(opt);
+});
+document.getElementById("totalCount").textContent = DATA.length + " franjas";
+
+const searchInput = document.getElementById("searchInput");
+const sortMode = document.getElementById("sortMode");
+const searchModeEl = document.getElementById("searchMode");
+const resultsEl = document.getElementById("results");
+const countEl = document.getElementById("resultCount");
+
+// índice de cada fila: 0 sala, 1 inicio, 2 fin, 3 curso, 4 profesor
+function groupBy(rows, fieldIndex){
+  const map = new Map();
+  rows.forEach(r=>{
+    const key = r[fieldIndex] && r[fieldIndex].trim() ? r[fieldIndex].trim() : "__VACIO__";
+    if(!map.has(key)) map.set(key, []);
+    map.get(key).push(r);
+  });
+  return map;
+}
+
+function updatePlaceholder(){
+  searchInput.placeholder = searchModeEl.value === "curso"
+    ? "Ej. Cálculo Integral, Derecho Penal, Didáctica I…"
+    : "Ej. Guzman Alvarez, Correa Mena, Ugarte…";
+}
+
+function render(){
+  const mode = searchModeEl.value; // "prof" o "curso"
+  const matchField = mode === "curso" ? 3 : 4;
+  const groupField = mode === "curso" ? 3 : 4;
+  const otherField = mode === "curso" ? 4 : 3;
+  const q = norm(searchInput.value.trim());
+  const room = roomSelect.value;
+
+  let rows = DATA.filter(r=>{
+    const matchesRoom = !room || r[0] === room;
+    let matchesQ = !q || norm(r[matchField]).includes(q);
+    if(!matchesQ && mode === "curso"){
+      const aliases = getAliases(r[3]);
+      if(aliases && aliases.some(a=> norm(a).includes(q))) matchesQ = true;
+    }
+    return matchesRoom && matchesQ;
+  });
+
+  const grouped = groupBy(rows, groupField);
+  let entries = [...grouped.entries()];
+
+  if(sortMode.value === "name"){
+    entries.sort((a,b)=>{
+      if(a[0]==="__VACIO__") return 1;
+      if(b[0]==="__VACIO__") return -1;
+      return a[0].localeCompare(b[0]);
+    });
+  } else if(sortMode.value === "count"){
+    entries.sort((a,b)=> b[1].length - a[1].length);
+  } else if(sortMode.value === "hora"){
+    entries.sort((a,b)=>{
+      const ah = Math.min(...a[1].map(x=>x[1]));
+      const bh = Math.min(...b[1].map(x=>x[1]));
+      return ah.localeCompare(bh);
+    });
+  }
+
+  const unidad = mode === "curso" ? "curso(s)" : "profesor(es)";
+  countEl.innerHTML = `<b>${rows.length}</b> franja(s) · <b>${entries.length}</b> ${unidad}${q?` para “${searchInput.value.trim()}”`:""}`;
+
+  if(entries.length === 0){
+    resultsEl.innerHTML = `<div class="empty">Sin coincidencias. Prueba con otro término, sin tildes.</div>`;
+    return;
+  }
+
+  const otherLabel = mode === "curso" ? "Profesor" : "Curso";
+  const emptyOtherMsg = mode === "curso" ? "Sin profesor asignado en el reporte" : "—";
+  const vacioMsg = mode === "curso" ? "Curso sin nombre legible en el reporte" : "Sin profesor asignado en el reporte";
+
+  resultsEl.innerHTML = entries.map(([key, items])=>{
+    items.sort((a,b)=> a[1].localeCompare(b[1]));
+    let aliasHtml = "";
+    if(mode === "curso" && key !== "__VACIO__"){
+      const aliases = getAliases(key);
+      if(aliases) aliasHtml = `<span class="alias">también: ${aliases.join(" · ")}</span>`;
+    }
+    const displayName = key === "__VACIO__" ? `<span class="no-prof">${vacioMsg}</span>` : `${key}${aliasHtml}`;
+    const rowsHtml = items.map(row=>{
+      const otherVal = row[otherField] && row[otherField].trim() ? row[otherField] : `<span class="no-prof">${emptyOtherMsg}</span>`;
+      let otherAliasHtml = "";
+      if(mode === "prof"){
+        const aliases = getAliases(row[3]);
+        if(aliases) otherAliasHtml = `<span class="alias-inline">también: ${aliases.join(" · ")}</span>`;
+      }
+      return `
+      <tr>
+        <td class="cell-hora" data-label="Hora">${row[1]}–${row[2]}</td>
+        <td data-label="Salón"><span class="cell-sala">${row[0]}</span></td>
+        <td class="cell-curso" data-label="${otherLabel}">${otherVal}${otherAliasHtml}</td>
+      </tr>
+    `;}).join("");
+    return `
+      <div class="prof-group">
+        <div class="prof-header">
+          <div class="prof-name">${displayName}</div>
+          <div class="prof-count">${items.length} clase${items.length>1?"s":""} hoy</div>
+        </div>
+        <table>
+          <thead><tr><th>Hora</th><th>Salón</th><th>${otherLabel}</th></tr></thead>
+          <tbody>${rowsHtml}</tbody>
+        </table>
+      </div>
+    `;
+  }).join("");
+}
+
+searchInput.addEventListener("input", render);
+roomSelect.addEventListener("change", render);
+sortMode.addEventListener("change", render);
+searchModeEl.addEventListener("change", ()=>{ updatePlaceholder(); render(); });
+updatePlaceholder();
+render();
+
+/* ---------- Panel de carga de PDF ---------- */
+const toggleUpload = document.getElementById("toggleUpload");
+const uploadPanel = document.getElementById("uploadPanel");
+toggleUpload.addEventListener("click", ()=>{
+  uploadPanel.classList.toggle("open");
+});
+
+const pdfInput = document.getElementById("pdfInput");
+const statusLine = document.getElementById("statusLine");
+const fallbackBox = document.getElementById("fallbackBox");
+
+let pdfjsLoadPromise = null;
+function loadPdfJs(){
+  if(pdfjsLoadPromise) return pdfjsLoadPromise;
+  pdfjsLoadPromise = new Promise((resolve, reject)=>{
+    const s = document.createElement("script");
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
+    s.onload = ()=> resolve();
+    s.onerror = ()=> reject(new Error("No se pudo cargar pdf.js desde el CDN"));
+    document.body.appendChild(s);
+  });
+  return pdfjsLoadPromise;
+}
+
+pdfInput.addEventListener("change", async (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  fallbackBox.classList.remove("show");
+  statusLine.textContent = "Cargando lector de PDF…";
+  statusLine.className = "status-line";
+
+  try{
+    await loadPdfJs();
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    statusLine.textContent = "Leyendo PDF…";
+    const buf = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({data:buf}).promise;
+    let totalChars = 0;
+    for(let i=1;i<=pdf.numPages;i++){
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      totalChars += content.items.reduce((sum,it)=> sum + (it.str||"").trim().length, 0);
+    }
+    if(totalChars < 40){
+      statusLine.textContent = "El PDF no tiene texto legible (parece una captura de pantalla).";
+      statusLine.classList.add("status-warn");
+      fallbackBox.classList.add("show");
+    } else {
+      statusLine.textContent = `Se detectó texto en el PDF (${pdf.numPages} página(s)), pero la estructura de tablas de este reporte cambia de un día a otro y aún no la reconstruyo automáticamente con certeza.`;
+      statusLine.classList.add("status-warn");
+      fallbackBox.classList.add("show");
+    }
+  }catch(err){
+    statusLine.textContent = "No se pudo leer el archivo (o el lector de PDF no cargó por la red). Usa la opción del chat.";
+    statusLine.classList.add("status-warn");
+    fallbackBox.classList.add("show");
+  }
+});
+</script>
+
+</body>
+</html>
